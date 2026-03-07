@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
   title: "Fiqhan Chusnan Arriziq | Flutter & AR Developer",
   description:
     "Fullstack Developer & AR Enthusiast. Lead Developer of DiengVibe - Bridging Heritage and Technology through AR",
+  icons: {
+    icon: "/Favicon.png",
+    shortcut: "/Favicon.png",
+    apple: "/apple-touch-icon.png",
+  },
   keywords: [
     "Flutter",
     "AR",
@@ -43,6 +49,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#030712] text-slate-50`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
