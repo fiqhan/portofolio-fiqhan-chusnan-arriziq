@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚀 Modern Developer Portfolio | Next.js 15 & AR Integration
 
-## Getting Started
+Selamat datang di repository portofolio profesional saya. Website ini dibangun menggunakan **Next.js** terbaru untuk memamerkan proyek-proyek inovatif, terutama fokus pada pengembangan **Augmented Reality (AR)** dan optimasi performa aplikasi mobile.
 
-First, run the development server:
+## 🌟 Highlight Utama: DiengVibe Project
+Proyek unggulan dalam portofolio ini adalah **DiengVibe**, sebuah platform pariwisata berbasis AR yang berhasil dimigrasi dari Unity ke Native Flutter.
+- **Problem Solved:** Mengatasi kebijakan "Device and Network Abuse" Google Play & meningkatkan kompatibilitas perangkat (Oppo A77s & Mid-range devices).
+- **Result:** Peningkatan jangkauan perangkat hingga **98%** dan reduksi ukuran aplikasi sebesar **60%**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Kategori | Teknologi |
+| :--- | :--- |
+| **Framework** | Next.js 15 (App Router), React 19 |
+| **Styling** | Tailwind CSS |
+| **Animations** | Framer Motion |
+| **3D Rendering** | React Three Fiber / Model Viewer |
+| **Deployment** | Vercel |
+| **Language** | TypeScript |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 Fitur Website
+- **3D Interaction:** Integrasi model `.glb` yang interaktif langsung di browser.
+- **Responsive Design:** Optimasi penuh untuk perangkat mobile (Mobile-First).
+- **Case Studies:** Dokumentasi mendalam tentang tantangan teknis dan solusi (Unity to Flutter Migration).
+- **Dark Mode Support:** Antarmuka modern yang nyaman di mata.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📦 Menjalankan Proyek Secara Lokal
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Pastikan kamu sudah menginstal [Node.js](https://nodejs.org/) versi terbaru.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Clone Repository:**
+   ```bash
+   git clone [https://github.com/fiqhan/portofolio-fiqhan-chusnan-arriziq.git](https://github.com/fiqhan/portofolio-fiqhan-chusnan-arriziq.git)
