@@ -41,20 +41,12 @@ export default function Contact() {
     const renderWidget = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
         try {
-          // Memastikan sitekey diambil secara aman sebagai string primitif
-          const siteKeyEnv = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-          const siteKeyString =
-            typeof siteKeyEnv === "string" ? siteKeyEnv : "";
+          // Definisikan siteKey secara eksplisit sebagai variabel string primitif murni
+          const sitekeyValue: string = "0x4AAAAAAFZbySlok0J3eSpR";
 
-          if (!siteKeyString) {
-            console.error(
-              "Cloudflare Turnstile Site Key belum disetel atau kosong.",
-            );
-            return;
-          }
-
+          // Panggil render dengan objek literal yang bersih dari referensi luar
           widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-            sitekey: siteKeyString,
+            sitekey: sitekeyValue,
             theme: "auto",
             callback: (token: string) => {
               setTurnstileToken(token);
