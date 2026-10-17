@@ -33,6 +33,8 @@ export default function Contact() {
   useEffect(() => {
     setIsMounted(true);
 
+    console.log("STATUS SITE_KEY:", process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
     const scriptId = "cloudflare-turnstile-script";
 
     // Fungsi untuk merender widget dan menangkap token
