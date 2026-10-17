@@ -1,11 +1,16 @@
 "use client";
 
 import { Mail, MapPin } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -190,14 +195,15 @@ export default function Contact() {
                   />
                 </div>
 
-                {/* 1. Tambahkan Widget Cloudflare Turnstile di Sini */}
-                <div
-                  className="cf-turnstile my-3"
-                  data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-                  data-theme="auto"
-                />
+                {/* Widget Turnstile dirender aman menggunakan pengecekan isMounted */}
+                {isMounted && (
+                  <div
+                    className="cf-turnstile my-3"
+                    data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                    data-theme="auto"
+                  />
+                )}
 
-                {/* 2. Tombol Kirim Pesan Tetap di Bawahnya */}
                 <button
                   type="submit"
                   disabled={loading}
