@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,27 +14,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fiqhan Chusnan Arriziq | Flutter & AR Developer",
+  title: "Fiqhan Chusnan Arriziq | Pengembang Web dan Aplikasi",
   description:
-    "Fullstack Developer & AR Enthusiast. Lead Developer of DiengVibe - Bridging Heritage and Technology through AR",
+    "Pengembang Utama DiengVibe - Menjembatani Warisan Budaya dan Teknologi melalui AR",
   icons: {
-    icon: "/Favicon.png",
-    shortcut: "/Favicon.png",
-    apple: "/apple-touch-icon.png",
-  },
-  keywords: [
-    "Flutter",
-    "AR",
-    "Augmented Reality",
-    "Mobile Development",
-    "DiengVibe",
-    "React Three Fiber",
-  ],
-  authors: [{ name: "Fiqhan Chusnan Arriziq" }],
-  openGraph: {
-    title: "Fiqhan Chusnan Arriziq | Flutter & AR Developer",
-    description: "Bridging Heritage and Technology through AR",
-    type: "website",
+    icon: [
+      {
+        url: "/logo.webp",
+        sizes: "any",
+      },
+    ],
+    apple: {
+      url: "/logo.webp",
+      sizes: "180x180",
+      type: "image/webp",
+    },
   },
 };
 
@@ -45,13 +38,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="id" className="scroll-smooth">
+      <head>
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#030712] text-slate-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen bg-[#eef2f7] dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 selection:bg-slate-300 dark:selection:bg-slate-700 transition-colors duration-300`}
       >
+        <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-[#eef2f7] dark:bg-[#0b0f19] transition-colors duration-300">
+          <div className="absolute -top-32 -left-32 w-[650px] h-[650px] bg-white dark:bg-slate-800/20 rounded-full blur-[120px] transition-colors duration-300" />
+          <div className="absolute top-1/4 -right-20 w-[550px] h-[550px] bg-slate-200/60 dark:bg-slate-900/40 rounded-full blur-[140px] transition-colors duration-300" />
+          <div className="absolute bottom-10 -left-20 w-[500px] h-[500px] bg-slate-100/80 dark:bg-slate-900/20 rounded-full blur-[150px] transition-colors duration-300" />
+        </div>
+
         {children}
-        <SpeedInsights />
-        <Analytics />
       </body>
     </html>
   );
