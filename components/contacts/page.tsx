@@ -7,7 +7,7 @@ declare global {
   interface Window {
     turnstile?: {
       render: (
-        container: HTMLElement,
+        container: HTMLElement | string,
         options: {
           sitekey: string;
           theme?: string;
@@ -24,29 +24,20 @@ declare global {
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>("");
 
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    setIsMounted(true);
-
-    console.log("STATUS SITE_KEY:", process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
-
+    const siteKeyString = "0x4AAAAAAFZbySlok0J3eSpR";
     const scriptId = "cloudflare-turnstile-script";
 
-    // Fungsi untuk merender widget dan menangkap token
     const renderWidget = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
         try {
-          // Definisikan siteKey secara eksplisit sebagai variabel string primitif murni
-          const sitekeyValue: string = "0x4AAAAAAFZbySlok0J3eSpR";
-
-          // Panggil render dengan objek literal yang bersih dari referensi luar
           widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-            sitekey: sitekeyValue,
+            sitekey: siteKeyString,
             theme: "auto",
             callback: (token: string) => {
               setTurnstileToken(token);
@@ -76,7 +67,19 @@ export default function Contact() {
     } else {
       renderWidget();
     }
-  }, [isMounted]);
+
+    return () => {
+      // Bersihkan widget saat komponen di-unmount untuk mencegah duplikasi
+      if (widgetIdRef.current && window.turnstile) {
+        try {
+          window.turnstile.remove(widgetIdRef.current);
+          widgetIdRef.current = null;
+        } catch {
+          // Abaikan jika gagal membersihkan
+        }
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -271,13 +274,11 @@ export default function Contact() {
                 </div>
 
                 {/* Container Turnstile dengan Ref */}
-                {isMounted && (
-                  <div
-                    ref={turnstileRef}
-                    className="cf-turnstile my-3"
-                    data-theme="auto"
-                  />
-                )}
+                <div
+                  ref={turnstileRef}
+                  className="cf-turnstile my-3"
+                  data-theme="auto"
+                />
 
                 <button
                   type="submit"
