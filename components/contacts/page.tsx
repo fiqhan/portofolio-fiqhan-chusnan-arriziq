@@ -24,6 +24,7 @@ declare global {
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [turnstileToken, setTurnstileToken] = useState<string>("");
 
   const turnstileRef = useRef<HTMLDivElement>(null);
@@ -41,6 +42,7 @@ export default function Contact() {
             theme: "auto",
             callback: (token: string) => {
               setTurnstileToken(token);
+              setErrorMessage("");
             },
             "expired-callback": () => {
               setTurnstileToken("");
@@ -69,7 +71,6 @@ export default function Contact() {
     }
 
     return () => {
-      // Bersihkan widget saat komponen di-unmount untuk mencegah duplikasi
       if (widgetIdRef.current && window.turnstile) {
         try {
           window.turnstile.remove(widgetIdRef.current);
@@ -83,9 +84,10 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage("");
 
     if (!turnstileToken) {
-      alert(
+      setErrorMessage(
         "Harap selesaikan verifikasi Cloudflare Turnstile terlebih dahulu.",
       );
       return;
@@ -114,11 +116,11 @@ export default function Contact() {
       if (response.ok && result.success) {
         setSubmitted(true);
       } else {
-        alert(result.message || "Gagal mengirim pesan.");
+        setErrorMessage(result.message || "Gagal mengirim pesan.");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Terjadi kesalahan jaringan.");
+      setErrorMessage("Terjadi kesalahan jaringan.");
     } finally {
       setLoading(false);
     }
@@ -194,11 +196,17 @@ export default function Contact() {
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
                   Terima kasih telah menghubungi. Pesan telah diteruskan ke
-                  email saya dan saya akan membalasnya sesegera mungkin.
+                  email, dan saya akan membalasnya sesegera mungkin.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {errorMessage && (
+                  <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-600 dark:text-red-400">
+                    {errorMessage}
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label
