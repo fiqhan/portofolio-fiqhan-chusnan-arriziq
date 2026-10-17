@@ -14,7 +14,6 @@
 /build
 /dist
 *.tsbuildinfo
-next-env.d.ts
 
 # --- TESTING ---
 /coverage
@@ -32,7 +31,11 @@ Thumbs.db
 .pvs-studio.log
 
 # --- SECURITY & ENV (PENTING!) ---
-.env*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 !.env.example
 *.pem
 *.key
@@ -57,10 +60,10 @@ local.properties
 # --- VERCEL ---
 .vercel
 
-# --- MISC ---
-.TODO.md
+# --- MISC & IDE ---
 .idea/
 .vscode/
 *.swp
 *.bak
+.TODO.md
 .DIENGVIBE_TECH_ANALYSIS.md
