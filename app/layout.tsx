@@ -38,13 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="scroll-smooth">
-      <head>
-        <script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          async
-          defer
-        ></script>
-      </head>
+      <head></head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen bg-[#eef2f7] dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 selection:bg-slate-300 dark:selection:bg-slate-700 transition-colors duration-300`}
       >

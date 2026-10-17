@@ -8,15 +8,8 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com",
-              "frame-src 'self' https://challenges.cloudflare.com",
-              "connect-src 'self' https://*.cloudflare.com data:",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
-              "font-src 'self' data:",
-            ].join("; "),
+            value:
+              "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' data: blob: https://challenges.cloudflare.com https://*.challenges.cloudflare.com;",
           },
         ],
       },
@@ -24,4 +17,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default function configure() {
+  return nextConfig;
+}
