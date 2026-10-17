@@ -39,10 +39,20 @@ export default function Contact() {
     const renderWidget = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
         try {
-          // PERBAIKAN: Bungkus dengan String() agar dipastikan bertipe string,
-          // dan berikan fallback string site key Anda jika environment variable belum terbaca
+          // Memastikan sitekey diambil secara aman sebagai string primitif
+          const siteKeyEnv = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+          const siteKeyString =
+            typeof siteKeyEnv === "string" ? siteKeyEnv : "";
+
+          if (!siteKeyString) {
+            console.error(
+              "Cloudflare Turnstile Site Key belum disetel atau kosong.",
+            );
+            return;
+          }
+
           widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-            sitekey: String(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""),
+            sitekey: siteKeyString,
             theme: "auto",
             callback: (token: string) => {
               setTurnstileToken(token);
@@ -54,8 +64,8 @@ export default function Contact() {
               setTurnstileToken("");
             },
           });
-        } catch {
-          // Abaikan jika sudah ter-render
+        } catch (err) {
+          console.error("Gagal merender Turnstile:", err);
         }
       }
     };
@@ -249,7 +259,6 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  {/* PERBAIKAN: Membersihkan kelas ganda/typo 'id-message' */}
                   <label
                     htmlFor="message"
                     className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5"
