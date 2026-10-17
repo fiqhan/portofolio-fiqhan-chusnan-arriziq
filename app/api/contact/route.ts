@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       "cf-turnstile-response": token,
     } = body;
 
-    // 0. Validasi Turnstile Token (Siteverify)
+    // 1. Validasi Token Turnstile
     if (!token) {
       return NextResponse.json(
         {
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+    const secretKey = process.env.CLOUDFRALE_TURNSTILE_SECRET_KEY;
     const verifyRes = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       {
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Validasi Input Kosong
+    // 2. Validasi Input Kosong
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { success: false, message: "Semua kolom wajib diisi." },
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Validasi Format Email
+    // 3. Validasi Format Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Sanitasi Input (XSS Prevention)
+    // 4. Sanitasi Input & Kirim Email via Resend
     const sanitizeInput = (str: string) => {
       return str
         .replace(/&/g, "&amp;")
@@ -80,7 +80,6 @@ export async function POST(request: Request) {
     const cleanSubject = sanitizeInput(subject);
     const cleanMessage = sanitizeInput(message);
 
-    // 4. Kirim Email via Resend
     const data = await resend.emails.send({
       from: "Portofolio Contact <onboarding@resend.dev>",
       to: ["arriziqfiqhan@gmail.com"],
