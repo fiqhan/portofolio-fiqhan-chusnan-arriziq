@@ -8,7 +8,13 @@ declare global {
     turnstile?: {
       render: (
         container: HTMLElement,
-        options: { sitekey: string; theme?: string },
+        options: {
+          sitekey: string;
+          theme?: string;
+          callback?: (token: string) => void;
+          "expired-callback"?: () => void;
+          "error-callback"?: () => void;
+        },
       ) => string;
       remove: (widgetId: string) => void;
     };
@@ -19,6 +25,8 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string>("");
+
   const turnstileRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
@@ -27,13 +35,22 @@ export default function Contact() {
 
     const scriptId = "cloudflare-turnstile-script";
 
-    // Fungsi untuk merender widget
+    // Fungsi untuk merender widget dan menangkap token
     const renderWidget = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
         try {
           widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
             sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
             theme: "auto",
+            callback: (token: string) => {
+              setTurnstileToken(token);
+            },
+            "expired-callback": () => {
+              setTurnstileToken("");
+            },
+            "error-callback": () => {
+              setTurnstileToken("");
+            },
           });
         } catch {
           // Abaikan jika sudah ter-render
@@ -57,6 +74,14 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!turnstileToken) {
+      alert(
+        "Harap selesaikan verifikasi Cloudflare Turnstile terlebih dahulu.",
+      );
+      return;
+    }
+
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -65,6 +90,7 @@ export default function Contact() {
       email: formData.get("email"),
       subject: formData.get("subject"),
       message: formData.get("message"),
+      "cf-turnstile-response": turnstileToken, // Sertakan token untuk divalidasi di backend (siteverify)
     };
 
     try {
@@ -223,7 +249,7 @@ export default function Contact() {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5"
+                    className="block id-message block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5"
                   >
                     Pesan
                   </label>

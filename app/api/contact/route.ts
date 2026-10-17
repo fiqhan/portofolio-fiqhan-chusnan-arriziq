@@ -6,7 +6,48 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, subject, message } = body;
+    const {
+      name,
+      email,
+      subject,
+      message,
+      "cf-turnstile-response": token,
+    } = body;
+
+    // 0. Validasi Turnstile Token (Siteverify)
+    if (!token) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Verifikasi Cloudflare Turnstile diperlukan.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
+    const verifyRes = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret: secretKey,
+          response: token,
+        }),
+      },
+    );
+
+    const verifyData = await verifyRes.json();
+
+    if (!verifyData.success) {
+      return NextResponse.json(
+        { success: false, message: "Verifikasi bot gagal. Silakan coba lagi." },
+        { status: 403 },
+      );
+    }
 
     // 1. Validasi Input Kosong
     if (!name || !email || !subject || !message) {
@@ -52,7 +93,7 @@ export async function POST(request: Request) {
           <p><strong>Subjek:</strong> ${cleanSubject}</p>
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
           <p><strong>Pesan:</strong></p>
-          <p style="white-space: pre-wrap; background: #f9f9f9; padding: 15px; rounded: 8px;">${cleanMessage}</p>
+          <p style="white-space: pre-wrap; background: #f9f9f9; padding: 15px; border-radius: 8px;">${cleanMessage}</p>
         </div>
       `,
     });
