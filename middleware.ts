@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com",
     "frame-src 'self' https://challenges.cloudflare.com",
-    "connect-src 'self' https://*.cloudflare.com https://*.challenges.cloudflare.com https://dnstest.dev data: blob: *",
+    "connect-src 'self' https://*.cloudflare.com https://*.challenges.cloudflare.com https://dnstest.dev data: blob:",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: https:",
     "font-src 'self' data:",
