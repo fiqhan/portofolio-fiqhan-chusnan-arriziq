@@ -110,7 +110,7 @@ export default function About() {
                     Universitas Sains Al-Qur&apos;an (UNSIQ) Jawa Tengah di
                     Wonosobo
                   </strong>
-                  .[cite: 19]
+                  .
                 </p>
                 <p>
                   Saya memiliki ketertarikan mendalam pada pengembangan Web,
@@ -121,7 +121,7 @@ export default function About() {
                   </strong>
                   , saya berfokus menciptakan solusi teknologi interaktif yang
                   aman, fungsional, dan memberikan pengalaman terbaik bagi
-                  pengguna.[cite: 19]
+                  pengguna.
                 </p>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function About() {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                Wonosobo, Indonesia[cite: 19]
+                Wonosobo, Indonesia
               </span>
 
               <a
