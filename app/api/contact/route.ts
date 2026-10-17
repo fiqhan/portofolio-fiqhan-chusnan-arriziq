@@ -14,25 +14,20 @@ export async function POST(request: Request) {
       "cf-turnstile-response": token,
     } = body;
 
-    // 1. Validasi Token Turnstile
     if (!token) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Verifikasi Cloudflare Turnstile diperlukan.",
-        },
+        { success: false, message: "Token Turnstile tidak ditemukan." },
         { status: 400 },
       );
     }
 
+    // Verifikasi token ke Cloudflare
     const secretKey = process.env.CLOUDFRALE_TURNSTILE_SECRET_KEY;
     const verifyRes = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           secret: secretKey,
           response: token,
@@ -44,70 +39,24 @@ export async function POST(request: Request) {
 
     if (!verifyData.success) {
       return NextResponse.json(
-        { success: false, message: "Verifikasi bot gagal. Silakan coba lagi." },
+        { success: false, message: "Verifikasi Turnstile gagal oleh server." },
         { status: 403 },
       );
     }
 
-    // 2. Validasi Input Kosong
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { success: false, message: "Semua kolom wajib diisi." },
-        { status: 400 },
-      );
-    }
-
-    // 3. Validasi Format Email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, message: "Format email tidak valid." },
-        { status: 400 },
-      );
-    }
-
-    // 4. Sanitasi Input & Kirim Email via Resend
-    const sanitizeInput = (str: string) => {
-      return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#x27;");
-    };
-
-    const cleanName = sanitizeInput(name);
-    const cleanSubject = sanitizeInput(subject);
-    const cleanMessage = sanitizeInput(message);
-
-    const data = await resend.emails.send({
-      from: "Portofolio Contact <onboarding@resend.dev>",
+    // Lanjutkan pengiriman email via Resend jika verifikasi berhasil
+    const emailData = await resend.emails.send({
+      from: "Portfolio Contact <onboarding@resend.dev>", // Ganti dengan domain terverifikasi Anda jika ada
       to: ["arriziqfiqhan@gmail.com"],
-      replyTo: email,
-      subject: `[Portofolio] ${cleanSubject}`,
-      html: `
-        <div style="font-family: sans-serif; padding: 20px; color: #333;">
-          <h2>Pesan Baru dari Form Portofolio</h2>
-          <p><strong>Pengirim:</strong> ${cleanName} (${email})</p>
-          <p><strong>Subjek:</strong> ${cleanSubject}</p>
-          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-          <p><strong>Pesan:</strong></p>
-          <p style="white-space: pre-wrap; background: #f9f9f9; padding: 15px; border-radius: 8px;">${cleanMessage}</p>
-        </div>
-      `,
+      subject: `Pesan Baru dari Portofolio: ${subject}`,
+      text: `Nama: ${name}\nEmail: ${email}\n\nPesan:\n${message}`,
     });
 
-    return NextResponse.json(
-      { success: true, message: "Pesan berhasil terkirim!", data },
-      { status: 200 },
-    );
+    return NextResponse.json({ success: true, data: emailData });
   } catch (error) {
-    console.error("Error API Contact:", error);
+    console.error("API Error:", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: "Gagal mengirim email. Silakan coba lagi nanti.",
-      },
+      { success: false, message: "Terjadi kesalahan pada server." },
       { status: 500 },
     );
   }
