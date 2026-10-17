@@ -39,8 +39,10 @@ export default function Contact() {
     const renderWidget = () => {
       if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
         try {
+          // PERBAIKAN: Bungkus dengan String() agar dipastikan bertipe string,
+          // dan berikan fallback string site key Anda jika environment variable belum terbaca
           widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
-            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
+            sitekey: String(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""),
             theme: "auto",
             callback: (token: string) => {
               setTurnstileToken(token);
@@ -90,7 +92,7 @@ export default function Contact() {
       email: formData.get("email"),
       subject: formData.get("subject"),
       message: formData.get("message"),
-      "cf-turnstile-response": turnstileToken, // Sertakan token untuk divalidasi di backend (siteverify)
+      "cf-turnstile-response": turnstileToken,
     };
 
     try {
@@ -247,9 +249,10 @@ export default function Contact() {
                 </div>
 
                 <div>
+                  {/* PERBAIKAN: Membersihkan kelas ganda/typo 'id-message' */}
                   <label
                     htmlFor="message"
-                    className="block id-message block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5"
+                    className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5"
                   >
                     Pesan
                   </label>
