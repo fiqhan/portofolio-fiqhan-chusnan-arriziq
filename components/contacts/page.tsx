@@ -1,5 +1,6 @@
 "use client";
 
+import { Mail, MapPin } from "lucide-react";
 import { useState } from "react";
 
 export default function Contact() {
@@ -61,8 +62,7 @@ export default function Contact() {
               <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
                 Tertarik untuk berkolaborasi dalam proyek aplikasi mobile,
                 Augmented Reality, pengembangan web, atau konsultasi UI/UX?
-                Silakan hubungi saya melalui formulir ini atau media
-                sosial.[cite: 21]
+                Silakan hubungi saya melalui formulir ini atau media sosial.
               </p>
             </div>
 
@@ -70,7 +70,7 @@ export default function Contact() {
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/70 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700 text-xs">
                 <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300">
-                  📧
+                  <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <p className="text-slate-400 dark:text-slate-400 text-[10px] font-medium">
@@ -87,14 +87,14 @@ export default function Contact() {
 
               <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/70 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700 text-xs">
                 <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300">
-                  📍
+                  <MapPin className="w-4 h-4" />
                 </div>
                 <div>
                   <p className="text-slate-400 dark:text-slate-400 text-[10px] font-medium">
                     Lokasi
                   </p>
                   <p className="font-semibold text-slate-800 dark:text-white">
-                    Wonosobo, Jawa Tengah, Indonesia[cite: 21]
+                    Wonosobo, Jawa Tengah, Indonesia
                   </p>
                 </div>
               </div>
@@ -105,14 +105,13 @@ export default function Contact() {
           <div className="lg:col-span-7 bg-white/50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60 rounded-3xl p-6 sm:p-8">
             {submitted ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-8 space-y-3">
-                <span className="text-4xl">✨</span>
+                <span className="text-4xl">✓</span>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                   Pesan Terkirim!
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
                   Terima kasih telah menghubungi. Pesan telah diteruskan ke
-                  email saya dan saya akan membalasnya sesegera mungkin.[cite:
-                  21]
+                  email saya dan saya akan membalasnya sesegera mungkin.
                 </p>
               </div>
             ) : (
