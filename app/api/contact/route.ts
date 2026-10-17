@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     // Verifikasi token ke Cloudflare
-    const secretKey = process.env.CLOUDFRALE_TURNSTILE_SECRET_KEY;
+    const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY;
     const verifyRes = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       {
