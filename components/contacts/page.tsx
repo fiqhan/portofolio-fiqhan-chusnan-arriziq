@@ -1,16 +1,64 @@
 "use client";
 
 import { Mail, MapPin } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        element: HTMLElement,
+        options: {
+          sitekey?: string;
+          theme?: "auto" | "light" | "dark";
+        },
+      ) => void;
+    };
+  }
+}
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const turnstileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+
+    // Muat skrip Turnstile secara dinamis khusus di sisi klien
+    const scriptId = "cloudflare-turnstile-script";
+    if (!document.getElementById(scriptId)) {
+      const script = document.createElement("script");
+      script.id = scriptId;
+      script.src =
+        "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        if (window.turnstile && turnstileRef.current) {
+          try {
+            window.turnstile.render(turnstileRef.current, {
+              sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+              theme: "auto",
+            });
+          } catch (e) {
+            console.error("Turnstile render error:", e);
+          }
+        }
+      };
+      document.body.appendChild(script);
+    } else if (window.turnstile && turnstileRef.current) {
+      try {
+        window.turnstile.render(turnstileRef.current, {
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+          theme: "auto",
+        });
+      } catch (e) {
+        // Widget mungkin sudah dirender sebelumnya
+      }
+    }
+  }, [isMounted]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -195,9 +243,10 @@ export default function Contact() {
                   />
                 </div>
 
-                {/* Widget Turnstile dirender aman menggunakan pengecekan isMounted */}
+                {/* Container Turnstile dengan Ref */}
                 {isMounted && (
                   <div
+                    ref={turnstileRef}
                     className="cf-turnstile my-3"
                     data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                     data-theme="auto"
