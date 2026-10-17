@@ -32,7 +32,7 @@ export default function Hero() {
               (UNSIQ) dan Lead Developer DiengVibe, saya mengombinasikan
               keahlian di bidang Web Development, Mobile App, UI/UX Design,
               serta Cybersecurity untuk menciptakan pengalaman pengguna yang
-              imersif, aman, cepat, dan modern[cite: 23].
+              imersif, aman, cepat, dan modern.
             </p>
 
             {/* Buttons Action */}
