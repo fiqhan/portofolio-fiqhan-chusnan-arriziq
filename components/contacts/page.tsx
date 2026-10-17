@@ -3,16 +3,15 @@
 import { Mail, MapPin } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
+// Tambahkan deklarasi global agar TypeScript mengenali window.turnstile
 declare global {
   interface Window {
     turnstile?: {
       render: (
-        element: HTMLElement,
-        options: {
-          sitekey?: string;
-          theme?: "auto" | "light" | "dark";
-        },
-      ) => void;
+        container: HTMLElement,
+        options: { sitekey: string; theme?: string },
+      ) => string;
+      remove: (widgetId: string) => void;
     };
   }
 }
@@ -26,7 +25,6 @@ export default function Contact() {
   useEffect(() => {
     setIsMounted(true);
 
-    // Muat skrip Turnstile secara dinamis khusus di sisi klien
     const scriptId = "cloudflare-turnstile-script";
     if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
@@ -39,11 +37,11 @@ export default function Contact() {
         if (window.turnstile && turnstileRef.current) {
           try {
             window.turnstile.render(turnstileRef.current, {
-              sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+              sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
               theme: "auto",
             });
-          } catch (e) {
-            console.error("Turnstile render error:", e);
+          } catch {
+            // Tangkap error jika widget sudah ter-render
           }
         }
       };
@@ -51,11 +49,11 @@ export default function Contact() {
     } else if (window.turnstile && turnstileRef.current) {
       try {
         window.turnstile.render(turnstileRef.current, {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
           theme: "auto",
         });
-      } catch (e) {
-        // Widget mungkin sudah dirender sebelumnya
+      } catch {
+        // Tangkap error jika widget sudah ter-render
       }
     }
   }, [isMounted]);
