@@ -3,7 +3,6 @@
 import { Mail, MapPin } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
-// Tambahkan deklarasi global agar TypeScript mengenali window.turnstile
 declare global {
   interface Window {
     turnstile?: {
@@ -21,11 +20,27 @@ export default function Contact() {
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const turnstileRef = useRef<HTMLDivElement>(null);
+  const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
 
     const scriptId = "cloudflare-turnstile-script";
+
+    // Fungsi untuk merender widget
+    const renderWidget = () => {
+      if (window.turnstile && turnstileRef.current && !widgetIdRef.current) {
+        try {
+          widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+            sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
+            theme: "auto",
+          });
+        } catch {
+          // Abaikan jika sudah ter-render
+        }
+      }
+    };
+
     if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
       script.id = scriptId;
@@ -33,28 +48,10 @@ export default function Contact() {
         "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
       script.async = true;
       script.defer = true;
-      script.onload = () => {
-        if (window.turnstile && turnstileRef.current) {
-          try {
-            window.turnstile.render(turnstileRef.current, {
-              sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
-              theme: "auto",
-            });
-          } catch {
-            // Tangkap error jika widget sudah ter-render
-          }
-        }
-      };
+      script.onload = renderWidget;
       document.body.appendChild(script);
-    } else if (window.turnstile && turnstileRef.current) {
-      try {
-        window.turnstile.render(turnstileRef.current, {
-          sitekey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "",
-          theme: "auto",
-        });
-      } catch {
-        // Tangkap error jika widget sudah ter-render
-      }
+    } else {
+      renderWidget();
     }
   }, [isMounted]);
 
@@ -246,7 +243,6 @@ export default function Contact() {
                   <div
                     ref={turnstileRef}
                     className="cf-turnstile my-3"
-                    data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                     data-theme="auto"
                   />
                 )}
